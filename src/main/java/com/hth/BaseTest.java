@@ -5,6 +5,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 
+import com.hth.page.HomePage;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.BrowserType;
@@ -13,11 +14,12 @@ import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.BrowserType.LaunchOptions;
 
 public class BaseTest {
-    Playwright playwright;
-    Browser browser;
+    private Playwright playwright;
+    private Browser browser;
+    private BrowserContext context;
+    private Page page;
 
-    BrowserContext context;
-    Page page;
+    protected HomePage homePage;
 
     @BeforeClass
     void launchBrowser() {
@@ -37,18 +39,12 @@ public class BaseTest {
     void createContextAndPage() {
         context = browser.newContext();
         page = context.newPage();
+        page.navigate("https://tiki.vn");
+        homePage = new HomePage(page);
     }
 
     @AfterMethod
     void closeContext() {
         context.close();
-    }
-
-    protected void sleep(long time) {
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }
